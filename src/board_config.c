@@ -49,7 +49,7 @@ const mcu_board_config_t mcu_board_config = {
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
 		.event = board_event_handler,
-		.led.port = 2, .led.pin = 10,
+		.led.port = 1, .led.pin = 18,
 		.o_flags = 0
 };
 
@@ -89,7 +89,7 @@ const stratify_board_config_t stratify_board_config = {
 		.stderr_dev = "/dev/stdio-out",
 		.sys_flags = SYS_FLAGS_STDIO_FIFO,
 #endif
-		.sys_name = "CoAction Hero",
+		.sys_name = "Stratify Alpha",
 		.sys_version = "1.0.0",
 		.sys_memory_size = STFY_SYSTEM_MEMORY_SIZE,
 		.start = stratify_default_thread,

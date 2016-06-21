@@ -15,7 +15,7 @@
 
 const u32 _mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
 
-#define STFY_SYSTEM_CLOCK 72000000
+#define STFY_SYSTEM_CLOCK 60000000
 #define STFY_SYSTEM_OSC 12000000
 
 const mcu_board_config_t mcu_board_config = {
@@ -25,7 +25,7 @@ const mcu_board_config_t mcu_board_config = {
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
 		.event = 0,
 		.o_flags = 0,
-		.led.port = 2, .led.pin = 10
+		.led.port = 1, .led.pin = 18
 };
 
 const bootloader_board_config_t boot_board_config = {
@@ -35,7 +35,7 @@ const bootloader_board_config_t boot_board_config = {
 		.hw_req.port = 0, .hw_req.pin = 1,
 		.flags = 0,
 		.link_transport_driver = &link_transport,
-		.id = 1,
+		.id = __HARDWARE_ID,
 };
 
 

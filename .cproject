@@ -17,19 +17,19 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-none-eabi"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\StratifyLabs-SDK\Tools\gcc"/>
-					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} -mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} ${C_FLAGS_ARMV7EM_FPU}"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
 					<stringMacro name="TOOLSPATH_macosx" type="VALUE_TEXT" value="/Applications/StratifyLabs-SDK/Tools/gcc"/>
 					<stringMacro name="BUILD_DEVICE" type="VALUE_TEXT" value="lpc407x_8x"/>
 					<stringMacro name="BUILD_NAME" type="VALUE_TEXT" value="StratifyAlpha"/>
 					<stringMacro name="RM_win32" type="VALUE_TEXT" value="../script/clean.bat"/>
-					<stringMacro name="SL" type="VALUE_TEXT" value="${DirectoryDelimiter}"/>
 					<stringMacro name="BUILD_TYPE" type="VALUE_TEXT" value=""/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc4078"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x0000000A"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="${TOOLSPATH}/${HOST}/lib/ldscripts/kernel-post-process.bat"/>
+					<stringMacro name="C_FLAGS_ARMV7EM_FPU" type="VALUE_TEXT" value="-mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
 					<stringMacro name="BUILD_ARCH" type="VALUE_TEXT" value="armv7e-m"/>
 				</macros>
 				<externalSettings/>
@@ -114,7 +114,7 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-none-eabi"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\StratifyLabs-SDK\Tools\gcc"/>
-					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} -mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} ${C_FLAGS_ARMV7EM_FPU}"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
 					<stringMacro name="TOOLSPATH_macosx" type="VALUE_TEXT" value="/Applications/StratifyLabs-SDK/Tools/gcc"/>
 					<stringMacro name="BUILD_DEVICE" type="VALUE_TEXT" value="lpc407x_8x"/>
@@ -123,9 +123,10 @@
 					<stringMacro name="BUILD_TYPE" type="VALUE_TEXT" value="_debug"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc4078"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x0000000A"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="${TOOLSPATH}/${HOST}/lib/ldscripts/kernel-post-process.bat"/>
+					<stringMacro name="C_FLAGS_ARMV7EM_FPU" type="VALUE_TEXT" value="-mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
 					<stringMacro name="BUILD_ARCH" type="VALUE_TEXT" value="armv7e-m"/>
 				</macros>
 				<externalSettings/>
@@ -209,7 +210,7 @@
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-none-eabi"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\StratifyLabs-SDK\Tools\gcc"/>
-					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} -mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} ${C_FLAGS_ARMV7EM_FPU}"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
 					<stringMacro name="TOOLSPATH_macosx" type="VALUE_TEXT" value="/Applications/StratifyLabs-SDK/Tools/gcc"/>
 					<stringMacro name="BUILD_DEVICE" type="VALUE_TEXT" value="lpc407x_8x"/>
@@ -218,9 +219,10 @@
 					<stringMacro name="BUILD_TYPE" type="VALUE_TEXT" value="_debug"/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc4078"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x0000000A"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="${TOOLSPATH}/${HOST}/lib/ldscripts/kernel-post-process.bat"/>
+					<stringMacro name="C_FLAGS_ARMV7EM_FPU" type="VALUE_TEXT" value="-mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
 					<stringMacro name="BUILD_ARCH" type="VALUE_TEXT" value="armv7e-m"/>
 				</macros>
 				<externalSettings/>
@@ -245,6 +247,7 @@
 								<option id="gnu.c.compiler.option.misc.other.837619951" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c ${C_FLAGS}" valueType="string"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.641890919" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__StratifyOS__"/>
+									<listOptionValue builtIn="false" value="__HARDWARE_ID=${HARDWARE_ID}"/>
 									<listOptionValue builtIn="false" value="__${BUILD_DEVICE}"/>
 									<listOptionValue builtIn="false" value="__${BUILD_TYPE}"/>
 								</option>
@@ -261,7 +264,7 @@
 									<listOptionValue builtIn="false" value="stratify_mcu_${BUILD_DEVICE}${BUILD_TYPE}"/>
 									<listOptionValue builtIn="false" value="m"/>
 									<listOptionValue builtIn="false" value="c"/>
-									<listOptionValue builtIn="false" value="gcc"/>
+									<listOptionValue builtIn="false" value="gcc-hard"/>
 								</option>
 								<option id="gnu.c.link.option.paths.1145704154" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${TOOLSPATH}/${HOST}/lib/${BUILD_ARCH}/${BUILD_FLOAT}&quot;"/>
@@ -298,11 +301,11 @@
 					<stringMacro name="TOOLSPATH" type="VALUE_TEXT" value="${TOOLSPATH_${OsType}}"/>
 					<stringMacro name="BUILD_FLOAT" type="VALUE_TEXT" value="fpu/fpv5-sp-d16"/>
 					<stringMacro name="RM" type="VALUE_TEXT" value="${RM_${OsType}}"/>
-					<stringMacro name="START_ADDR" type="VALUE_TEXT" value="0"/>
+					<stringMacro name="START_ADDR" type="VALUE_TEXT" value="0x0"/>
 					<stringMacro name="RM_win64" type="VALUE_TEXT" value="${RM_win32}"/>
 					<stringMacro name="HOST" type="VALUE_TEXT" value="arm-none-eabi"/>
 					<stringMacro name="TOOLSPATH_win32" type="VALUE_TEXT" value="C:\StratifyLabs-SDK\Tools\gcc"/>
-					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} -mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
+					<stringMacro name="C_FLAGS" type="VALUE_TEXT" value="-fmessage-length=0 -fomit-frame-pointer -mthumb -march=${BUILD_ARCH} ${C_FLAGS_ARMV7EM_FPU}"/>
 					<stringMacro name="RM_macosx" type="VALUE_TEXT" value="rm -rf"/>
 					<stringMacro name="TOOLSPATH_macosx" type="VALUE_TEXT" value="/Applications/StratifyLabs-SDK/Tools/gcc"/>
 					<stringMacro name="BUILD_DEVICE" type="VALUE_TEXT" value="lpc407x_8x"/>
@@ -311,9 +314,10 @@
 					<stringMacro name="BUILD_TYPE" type="VALUE_TEXT" value=""/>
 					<stringMacro name="TOOLSPATH_win64" type="VALUE_TEXT" value="${TOOLSPATH_win32}"/>
 					<stringMacro name="DEVICE" type="VALUE_TEXT" value="lpc4078"/>
-					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x00000001"/>
+					<stringMacro name="HARDWARE_ID" type="VALUE_TEXT" value="0x0000000A"/>
 					<stringMacro name="POSTPROCESS" type="VALUE_TEXT" value="${POSTPROCESS_${OsType}}"/>
 					<stringMacro name="POSTPROCESS_win32" type="VALUE_TEXT" value="${TOOLSPATH}/${HOST}/lib/ldscripts/kernel-post-process.bat"/>
+					<stringMacro name="C_FLAGS_ARMV7EM_FPU" type="VALUE_TEXT" value="-mfloat-abi=hard -mfpu=fpv4-sp-d16 -U__SOFTFP__ -D__FPU_USED=1"/>
 					<stringMacro name="BUILD_ARCH" type="VALUE_TEXT" value="armv7e-m"/>
 				</macros>
 				<externalSettings/>
@@ -337,6 +341,7 @@
 								<option id="gnu.c.compiler.option.debugging.level.1808501212" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.misc.other.812100877" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c ${C_FLAGS}" valueType="string"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.2093058183" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__HARDWARE_ID=${HARDWARE_ID}"/>
 									<listOptionValue builtIn="false" value="__StratifyOS__"/>
 									<listOptionValue builtIn="false" value="__${BUILD_DEVICE}"/>
 									<listOptionValue builtIn="false" value="__${BUILD_TYPE}"/>
@@ -354,7 +359,7 @@
 									<listOptionValue builtIn="false" value="stratify_mcu_${BUILD_DEVICE}${BUILD_TYPE}"/>
 									<listOptionValue builtIn="false" value="m"/>
 									<listOptionValue builtIn="false" value="c"/>
-									<listOptionValue builtIn="false" value="gcc"/>
+									<listOptionValue builtIn="false" value="gcc-hard"/>
 								</option>
 								<option id="gnu.c.link.option.paths.1357262095" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${TOOLSPATH}/${HOST}/lib/${BUILD_ARCH}/${BUILD_FLOAT}&quot;"/>
@@ -384,32 +389,6 @@
 		<project id="CoAction-Hero.cdt.managedbuild.target.gnu.cross.exe.314667782" name="Executable" projectType="cdt.managedbuild.target.gnu.cross.exe"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="build_lpc17xx_secure">
-			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
-		</configuration>
-		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
-		</configuration>
-		<configuration configurationName="build_debug_lpc17xx"/>
-		<configuration configurationName="build_lpc17xx">
-			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
-		</configuration>
-		<configuration configurationName="build_release_lpc17xx_secure"/>
-		<configuration configurationName="build_release_lpc17xx"/>
-		<configuration configurationName="build_debug_lpc17xx_stdio_vcp"/>
-		<configuration configurationName="Release_CoActionOS_lpc17xx">
-			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
-		</configuration>
-		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
-		</configuration>
-		<configuration configurationName="build_lpc17xx_debug"/>
-		<configuration configurationName="build">
-			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
-		</configuration>
-		<configuration configurationName="build_release_lpc17xx_public"/>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -425,5 +404,35 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.262901993.2064609313.609039573.1707679591;cdt.managedbuild.config.gnu.cross.exe.debug.262901993.2064609313.609039573.1707679591.;cdt.managedbuild.tool.gnu.cross.c.compiler.2119488733;cdt.managedbuild.tool.gnu.c.compiler.input.1936168168">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="build_lpc17xx_secure">
+			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
+		</configuration>
+		<configuration configurationName="build_release"/>
+		<configuration configurationName="build_release_boot"/>
+		<configuration configurationName="build_debug"/>
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
+		</configuration>
+		<configuration configurationName="build">
+			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
+		</configuration>
+		<configuration configurationName="build_debug_lpc17xx"/>
+		<configuration configurationName="build_lpc17xx">
+			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
+		</configuration>
+		<configuration configurationName="build_debug_boot"/>
+		<configuration configurationName="build_release_lpc17xx_secure"/>
+		<configuration configurationName="build_release_lpc17xx"/>
+		<configuration configurationName="build_debug_lpc17xx_stdio_vcp"/>
+		<configuration configurationName="Release_CoActionOS_lpc17xx">
+			<resource resourceType="PROJECT" workspacePath="/CoAction-Hero"/>
+		</configuration>
+		<configuration configurationName="build_lpc17xx_debug"/>
+		<configuration configurationName="build_release_lpc17xx_public"/>
 	</storageModule>
 </cproject>
