@@ -21,6 +21,7 @@ link_transport_driver_t link_transport = {
 		.close = stratify_link_transport_usb_close,
 		.wait = stratify_link_transport_usb_wait,
 		.flush = stratify_link_transport_usb_flush,
+		.notify = stratify_link_transport_usb_notify,
 		.timeout = 500
 };
 

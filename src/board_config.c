@@ -23,18 +23,17 @@ limitations under the License.
 #include <mcu/device.h>
 #include <mcu/debug.h>
 #include <iface/device_config.h>
-#include <device/microchip/sst25vf.h>
-#include <device/microchip/enc28j60.h>
-#include <device/sys.h>
-#include <device/uartfifo.h>
-#include <device/usbfifo.h>
-#include <device/fifo.h>
+#include <dev/microchip/sst25vf.h>
+#include <dev/sys.h>
+#include <dev/uartfifo.h>
+#include <dev/usbfifo.h>
+#include <dev/fifo.h>
 #include <iface/link.h>
 #include <stratify/sysfs.h>
 #include <stratify/sffs.h>
 #include <stratify/stratify.h>
-#include <device/sys.h>
-
+#include <dev/sys.h>
+#include <iface/link.h>
 
 #include "link_transport.h"
 
@@ -71,8 +70,6 @@ void board_event_handler(int event, void * args){
 	}
 }
 
-
-
 const stratify_board_config_t stratify_board_config = {
 		.clk_usecond_tmr = 3,
 		.task_total = SCHED_TASK_TOTAL,
@@ -99,7 +96,6 @@ const stratify_board_config_t stratify_board_config = {
 
 volatile sched_task_t stratify_sched_table[SCHED_TASK_TOTAL] MCU_SYS_MEM;
 task_t stratify_task_table[SCHED_TASK_TOTAL] MCU_SYS_MEM;
-
 
 #define USER_ROOT 0
 #define GROUP_ROOT 0
@@ -149,8 +145,20 @@ usbfifo_state_t usb0_fifo_state_alt MCU_SYS_MEM;
 #else
 char stdio_out_buffer[STDIO_BUFFER_SIZE];
 char stdio_in_buffer[STDIO_BUFFER_SIZE];
-fifo_cfg_t stdio_out_cfg = { .buffer = stdio_out_buffer, .size = STDIO_BUFFER_SIZE };
-fifo_cfg_t stdio_in_cfg = { .buffer = stdio_in_buffer, .size = STDIO_BUFFER_SIZE };
+
+void stdio_out_notify_write(int nbyte){
+	link_transport_notify_t args;
+	link_notify_dev_t notify;
+	notify.id = LINK_NOTIFY_ID_DEVICE_WRITE;
+	strcpy(notify.name, "stdio-out");
+	notify.nbyte = nbyte;
+	args.buf = &notify;
+	args.nbyte = sizeof(link_notify_dev_t);
+	stratify_link_transport_usb_notify(&args);
+}
+
+fifo_cfg_t stdio_out_cfg = FIFO_DEVICE_CFG(stdio_out_buffer, STDIO_BUFFER_SIZE, 0, 0);
+fifo_cfg_t stdio_in_cfg = FIFO_DEVICE_CFG(stdio_in_buffer, STDIO_BUFFER_SIZE, 0, 0);
 fifo_state_t stdio_out_state = { .head = 0, .tail = 0, .rop = NULL, .rop_len = 0, .wop = NULL, .wop_len = 0 };
 fifo_state_t stdio_in_state = {
 		.head = 0, .tail = 0, .rop = NULL, .rop_len = 0, .wop = NULL, .wop_len = 0
@@ -187,7 +195,7 @@ const device_t devices[] = {
 		DEVICE_PERIPH("rtc", mcu_rtc, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("spi0", mcu_ssp, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("spi1", mcu_ssp, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
-		DEVICE_PERIPH("spi2", mcu_spi, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
+		DEVICE_PERIPH("spi2", mcu_ssp, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("tmr0", mcu_tmr, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("tmr1", mcu_tmr, 1, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 		DEVICE_PERIPH("tmr2", mcu_tmr, 2, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
@@ -200,7 +208,7 @@ const device_t devices[] = {
 		DEVICE_PERIPH("usb0", mcu_usb, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 
 		//user devices
-		SST25VF_DEVICE("disk0", 0, 0, 0, 16, 20000000, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, GROUP_ROOT),
+		//SST25VF_DEVICE("disk0", 0, 0, 0, 16, 20000000, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		//FIFO buffers used for std in and std out
 #ifdef __STDIO_VCP
@@ -209,13 +217,13 @@ const device_t devices[] = {
 		FIFO_DEVICE("stdio-out", &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, GROUP_ROOT),
 		FIFO_DEVICE("stdio-in", &stdio_in_cfg, &stdio_in_state, 0666, USER_ROOT, GROUP_ROOT),
 #endif
-
 		//system devices
 		USBFIFO_DEVICE("link-phy-usb", &stratify_link_transport_usb_fifo_cfg, &stratify_link_transport_usb_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		SYS_DEVICE,
 		DEVICE_TERMINATOR
 };
+
 
 extern const sffs_cfg_t sffs_cfg;
 sffs_state_t sffs_state;
@@ -228,8 +236,9 @@ const sffs_cfg_t sffs_cfg = {
 		.state = &sffs_state
 };
 
-/*
 
+
+/*
 fatfs_state_t fatfs_state;
 open_file_t fatfs_open_file; // Cannot be in HWPL_SYS_MEM because it is accessed in unpriv mode
 
@@ -242,7 +251,6 @@ const fatfs_cfg_t fatfs_cfg = {
 };
  */
 
-
 const sysfs_t const sysfs_list[] = {
 		SYSFS_APP("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
 		SYSFS_DEV("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
@@ -251,8 +259,5 @@ const sysfs_t const sysfs_list[] = {
 		SYSFS_ROOT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
 		SYSFS_TERMINATOR
 };
-
-
-
 
 
