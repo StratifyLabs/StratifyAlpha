@@ -21,5 +21,6 @@ limitations under the License.
 #define SYMBOLS_IGNORE_DCOMPLEX 1
 #define SYMBOLS_IGNORE_SON 1
 #define SYMBOLS_IGNORE_SG 1
+#define SYMBOLS_IGNORE_POSIX_TRACE 1
 
 #include <stratify/symbols_table.h>

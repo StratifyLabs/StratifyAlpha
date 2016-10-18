@@ -1,6 +1,6 @@
 {
     "IsInstallKernelData": false,
-    "IsKernelFormatHome": true,
+    "IsKernelFormatHome": false,
     "IsKernelRunTests": false,
     "IsKernelVerify": false,
     "KernelBootSuffix": "_boot",

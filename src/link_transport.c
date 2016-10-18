@@ -15,13 +15,13 @@ static link_transport_phy_t link_transport_open(const char * name, int baudrate)
 
 link_transport_driver_t link_transport = {
 		.handle = -1,
+		.notify_handle = -1,
 		.open = link_transport_open,
 		.read = stratify_link_transport_usb_read,
 		.write = stratify_link_transport_usb_write,
 		.close = stratify_link_transport_usb_close,
 		.wait = stratify_link_transport_usb_wait,
 		.flush = stratify_link_transport_usb_flush,
-		.notify = stratify_link_transport_usb_notify,
 		.timeout = 500
 };
 
