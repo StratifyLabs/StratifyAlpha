@@ -75,17 +75,10 @@ const stratify_board_config_t stratify_board_config = {
 		.task_total = SCHED_TASK_TOTAL,
 		.clk_usec_mult = (uint32_t)(STFY_SYSTEM_CLOCK / 1000000),
 		.clk_nsec_div = (uint32_t)((uint64_t)1024 * 1000000000 / STFY_SYSTEM_CLOCK),
-#ifdef __STDIO_VCP
-		.stdin_dev = "/dev/stdio" ,
-		.stdout_dev = "/dev/stdio",
-		.stderr_dev = "/dev/stdio",
-		.sys_flags = SYS_FLAGS_STDIO_VCP,
-#else
 		.stdin_dev = "/dev/stdio-in" ,
 		.stdout_dev = "/dev/stdio-out",
 		.stderr_dev = "/dev/stdio-out",
 		.o_sys_flags = SYS_FLAGS_STDIO_FIFO | SYS_FLAGS_NOTIFY,
-#endif
 		.sys_name = "Stratify Alpha",
 		.sys_version = "1.0.0",
 		.sys_memory_size = STFY_SYSTEM_MEMORY_SIZE,
@@ -200,12 +193,9 @@ const device_t devices[] = {
 		//SST25VF_DEVICE("disk0", 0, 0, 0, 16, 20000000, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		//FIFO buffers used for std in and std out
-#ifdef __STDIO_VCP
-		USBFIFO_DEVICE("stdio", &usb0_fifo_cfg_alt, &usb0_fifo_state_alt, 0666, USER_ROOT, GROUP_ROOT),
-#else
 		FIFO_DEVICE("stdio-out", &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, GROUP_ROOT),
 		FIFO_DEVICE("stdio-in", &stdio_in_cfg, &stdio_in_state, 0666, USER_ROOT, GROUP_ROOT),
-#endif
+
 		//system devices
 		USBFIFO_DEVICE("link-phy-usb", &stratify_link_transport_usb_fifo_cfg, &stratify_link_transport_usb_fifo_state, 0666, USER_ROOT, GROUP_ROOT),
 
