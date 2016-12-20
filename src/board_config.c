@@ -102,7 +102,7 @@ sst25vf_state_t sst25vf_state MCU_SYS_MEM;
 /* This is the configuration specific structure for the sst25vf
  * flash IC driver.
  */
-const sst25vf_cfg_t sst25vf_cfg = SST25VF_DEVICE_CFG(-1, 0, -1, 0, 0, 17, 1*1024*1024);
+const sst25vf_cfg_t sst25vf_cfg = SST25VF_DEVICE_CFG(-1, 0, -1, 0, 0, 8, 2*1024*1024);
 
 #define UART0_DEVFIFO_BUFFER_SIZE 128
 char uart0_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
@@ -190,7 +190,7 @@ const device_t devices[] = {
 		DEVICE_PERIPH("usb0", mcu_usb, 0, 0666, USER_ROOT, GROUP_ROOT, S_IFCHR),
 
 		//user devices
-		//SST25VF_DEVICE("disk0", 0, 0, 0, 16, 20000000, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, GROUP_ROOT),
+		SST25VF_SSP_DEVICE("disk0", 1, 0, 0, 6, 10000000, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, GROUP_ROOT),
 
 		//FIFO buffers used for std in and std out
 		FIFO_DEVICE("stdio-out", &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, GROUP_ROOT),
@@ -206,10 +206,10 @@ const device_t devices[] = {
 
 extern const sffs_cfg_t sffs_cfg;
 sffs_state_t sffs_state;
-open_file_t cafs_open_file; // Cannot be in HWPL_SYS_MEM because it is accessed in unpriv mode
+open_file_t sffs_open_file; // Cannot be in HWPL_SYS_MEM because it is accessed in unpriv mode
 
 const sffs_cfg_t sffs_cfg = {
-		.open_file = &cafs_open_file,
+		.open_file = &sffs_open_file,
 		.devfs = &(sysfs_list[1]),
 		.name = "disk0",
 		.state = &sffs_state
@@ -233,7 +233,7 @@ const fatfs_cfg_t fatfs_cfg = {
 const sysfs_t const sysfs_list[] = {
 		SYSFS_APP("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
 		SYSFS_DEV("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
-		//SFFS("/home", &sffs_cfg, SYSFS_ALL_ACCESS), //the stratify file system on external RAM
+		SFFS("/home", &sffs_cfg, SYSFS_ALL_ACCESS), //the stratify file system on external RAM
 		//FATFS("/home", &fatfs_cfg, SYSFS_ALL_ACCESS), //fat filesystem with external SD card
 		SYSFS_ROOT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
 		SYSFS_TERMINATOR
