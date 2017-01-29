@@ -47,6 +47,7 @@ const mcu_board_config_t mcu_board_config = {
 		.core_cpu_freq = STFY_SYSTEM_CLOCK,
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
+		.usb_pin_assign = 0,
 		.event = board_event_handler,
 		.led.port = 1, .led.pin = 18,
 		.o_flags = 0
