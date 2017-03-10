@@ -11,6 +11,7 @@
     "github": "https://github.com/StratifyLabs/StratifyAlpha",
     "hardwareid": "0x0000000A",
     "name": "StratifyAlpha",
+    "permissions": "public",
     "publisher": "Stratify Labs, Inc",
     "tags": "nxp,lpc,lpc40xx,lpc4078,arm,cortex-m4",
     "type": "StratifyKernel",
