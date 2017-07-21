@@ -8,7 +8,7 @@
 #ifndef LINK_TRANSPORT_H_
 #define LINK_TRANSPORT_H_
 
-#include <iface/stratify_link_transport_usb.h>
+#include <sos/sos_link_transport_usb.h>
 extern link_transport_driver_t link_transport;
 
 
