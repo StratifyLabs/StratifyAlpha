@@ -37,33 +37,27 @@ link_transport_driver_t link_transport = {
 		.timeout = 500
 };
 
-#define USBDEV_CONNECT_PORT "/dev/pio2"
-#define USBDEV_CONNECT_PINMASK (1<<9)
-
 static usbd_control_t m_usb_control;
 
 link_transport_phy_t link_transport_open(const char * name, int baudrate){
-	pio_attr_t attr;
+	usb_attr_t usb_attr;
 	link_transport_phy_t fd;
-	int fd_pio;
 
-	//Deassert the Connect line and enable the output
-	fd_pio = open(USBDEV_CONNECT_PORT, O_RDWR);
-	if( fd_pio < 0 ){
-		mcu_debug("Failed to open %s\n", USBDEV_CONNECT_PORT);
-		return -1;
-	}
-	attr.o_pinmask = (USBDEV_CONNECT_PINMASK);
-	ioctl(fd_pio, I_PIO_SETMASK, (void*)attr.o_pinmask);
-	attr.o_flags = PIO_FLAG_SET_OUTPUT | PIO_FLAG_IS_DIRONLY;
-	ioctl(fd_pio, I_PIO_SETATTR, &attr);
+	//set up the USB attributes
+	memset(&(usb_attr.pin_assignment), 0xff, sizeof(usb_pin_assignment_t));
+	usb_attr.o_flags = USB_FLAG_SET_DEVICE;
+	usb_attr.pin_assignment.dp.port = 0;
+	usb_attr.pin_assignment.dp.pin = 29;
+	usb_attr.pin_assignment.dm.port = 0;
+	usb_attr.pin_assignment.dm.pin = 30;
+	usb_attr.freq = mcu_board_config.core_osc_freq;
 
-	memset(&m_usb_control, 0, sizeof(m_usb_control));
-	m_usb_control.constants = &sos_link_transport_usb_constants;
-	fd = sos_link_transport_usb_open(name, &m_usb_control);
-
-	ioctl(fd_pio, I_PIO_CLRMASK, (void*)attr.o_pinmask);
-	close(fd_pio);
+	fd = sos_link_transport_usb_open(name,
+			&m_usb_control,
+			&sos_link_transport_usb_constants,
+			&usb_attr,
+			mcu_pin(2,9),
+			1); //USB pin is active high
 
 	return fd;
 }

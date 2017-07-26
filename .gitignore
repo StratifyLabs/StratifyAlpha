@@ -1,1 +1,6 @@
-build_*
+*.o
+*.a
+*.d
+*.s
+*.bin
+*.map

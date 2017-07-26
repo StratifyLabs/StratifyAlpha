@@ -24,7 +24,7 @@ limitations under the License.
 #include "link_transport.h"
 #include "board_config.h"
 
-const u32 _mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
+const u32 mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
 
 #define STFY_SYSTEM_CLOCK 60000000
 #define STFY_SYSTEM_OSC 12000000
@@ -35,13 +35,19 @@ const mcu_board_config_t mcu_board_config = {
 		.core_periph_freq = STFY_SYSTEM_CLOCK,
 		.usb_max_packet_zero = MCU_CORE_USB_MAX_PACKET_ZERO_VALUE,
 		.debug_uart_port = 0,
-		.debug_uart_pin_assignment[0] = {0, 2},
-		.debug_uart_pin_assignment[1] = {0, 3},
-		.usb_pin_assignment[0] = {0, 29},
-		.usb_pin_assignment[1] = {0, 30},
-		.usb_pin_assignment[2] = {1, 30},
-		.usb_pin_assignment[3] = {0xff, 0xff},
-		.o_flags = MCU_BOARD_CONFIG_FLAG_LED_ACTIVE_HIGH,
+		.debug_uart_attr = {
+				.pin_assignment =
+				{
+						.rx = {0, 2},
+						.tx = {0, 3},
+						.cts = {0xff, 0xff},
+						.rts = {0xff, 0xff}
+				},
+				.freq = 115200,
+				.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1,
+				.width = 8
+		},
+		.o_flags = 0,
 		.led.port = 1, .led.pin = 18,
 		.event_handler = 0
 };
