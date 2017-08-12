@@ -1,6 +1,7 @@
 *.o
 *.a
 *.d
+*.map
 *.s
 *.bin
-*.map
+./build_*StratifyAlpha*

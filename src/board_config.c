@@ -69,7 +69,7 @@ const mcu_board_config_t mcu_board_config = {
 
 void board_event_handler(int event, void * args){
 	switch(event){
-	case MCU_BOARD_CONFIG_EVENT_PRIV_FATAL:
+	case MCU_BOARD_CONFIG_EVENT_ROOT_FATAL:
 		//start the bootloader on a fatal event
 		mcu_core_invokebootloader(0, 0);
 		break;
@@ -90,7 +90,7 @@ const sos_board_config_t sos_board_config = {
 		.stdin_dev = "/dev/stdio-in" ,
 		.stdout_dev = "/dev/stdio-out",
 		.stderr_dev = "/dev/stdio-out",
-		.o_sys_flags = SYS_FLAGS_STDIO_FIFO,
+		.o_sys_flags = SYS_FLAG_IS_STDIO_FIFO,
 		.sys_name = "Stratify Alpha",
 		.sys_version = "1.3",
 		.sys_id = "-KZKdVwMXIj6vTVsbX56",
@@ -121,9 +121,15 @@ const sst25vf_config_t sst25vf_cfg = {
 		.hold  = {.port = 0, .pin = 6 },
 		.wp  = {.port = 0, .pin = 6 },
 		.miso  = {.port = 0, .pin = 6 },
-		.attr = {
-				.o_flags = SPI_FLAG_SET_MASTER | SPI_FLAG_MODE0,
+		.spi.attr = {
+				.o_flags = SPI_FLAG_SET_MASTER | SPI_FLAG_IS_MODE0,
 				.freq = 10000000,
+				.pin_assignment = {
+						.miso = {0,0},
+						.mosi = {0,0},
+						.sck = {0,0},
+						.cs = {0xff,0xff}
+				}
 		},
 		.size = 2*1024*1024
 };
