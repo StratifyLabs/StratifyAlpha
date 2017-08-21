@@ -29,7 +29,7 @@ all: StratifyAlpha.elf
 StratifyAlpha.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	arm-none-eabi-gcc -L"/Applications/StratifyLabs-SDK/Tools/gcc/arm-none-eabi/lib/armv7e-m/fpu/fpv5-sp-d16" -L"/Applications/StratifyLabs-SDK/Tools/gcc/lib/gcc/arm-none-eabi/5.4.1/armv7e-m/fpu/fpv5-sp-d16" -Wl,-Map,fw.map,--gc,--defsym=_mcu_core_hardware_id=0x0000000A -Ttext=0x40000 -Tldscripts/lpc4078-rom.ld -nostdlib -u symbols_table -o "StratifyAlpha.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -L"/Applications/StratifyLabs-SDK/Tools/gcc/arm-none-eabi/lib/armv7e-m/fpu/fpv5-sp-d16" -L"/Applications/StratifyLabs-SDK/Tools/gcc/lib/gcc/arm-none-eabi/5.4.1/armv7e-m/fpu/fpv5-sp-d16" -Wl,-Map,fw.map,--gc,--defsym=mcu_core_hardware_id=0x0000000A -Ttext=0x40000 -Tldscripts/lpc4078-rom.ld -nostdlib -u symbols_table -o "StratifyAlpha.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

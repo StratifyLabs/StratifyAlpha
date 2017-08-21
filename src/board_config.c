@@ -35,6 +35,7 @@ limitations under the License.
 #include <sos/fs/sffs.h>
 #include <sos/sos.h>
 
+#include "board_trace.h"
 #include "link_transport.h"
 
 #define SOS_BOARD_SYSTEM_CLOCK 120000000
@@ -92,13 +93,16 @@ const sos_board_config_t sos_board_config = {
 		.stderr_dev = "/dev/stdio-out",
 		.o_sys_flags = SYS_FLAG_IS_STDIO_FIFO,
 		.sys_name = "Stratify Alpha",
-		.sys_version = "1.3",
+		.sys_version = "1.4",
 		.sys_id = "-KZKdVwMXIj6vTVsbX56",
 		.sys_memory_size = SOS_BOARD_SYSTEM_MEMORY_SIZE,
 		.start = sos_default_thread,
 		.start_args = &link_transport,
 		.start_stack_size = SOS_DEFAULT_START_STACK_SIZE,
-		.socket_api = 0
+		.socket_api = 0,
+		.request = 0,
+		.trace_dev = "/dev/trace",
+		.trace_event = board_trace_event
 		//.socket_api = &lwip_socket_api  //use this to include LWIP -- also remove SYMBOLS_IGNORE_SOCKET from symbols.c
 };
 
@@ -117,20 +121,20 @@ sst25vf_state_t sst25vf_state MCU_SYS_MEM;
  */
 //const sst25vf_cfg_t sst25vf_cfg = SST25VF_DEVICE_CFG(0, 6, -1, 0, -1, 0, 0, 8, 2*1024*1024, 10000000);
 const sst25vf_config_t sst25vf_cfg = {
-		.cs  = {.port = 0, .pin = 6 },
-		.hold  = {.port = 0, .pin = 6 },
-		.wp  = {.port = 0, .pin = 6 },
-		.miso  = {.port = 0, .pin = 6 },
 		.spi.attr = {
-				.o_flags = SPI_FLAG_SET_MASTER | SPI_FLAG_IS_MODE0,
-				.freq = 10000000,
+				.o_flags = SPI_FLAG_SET_MASTER | SPI_FLAG_IS_MODE0 | SPI_FLAG_IS_FORMAT_SPI,
+				.freq = 16000000,
+				.width = 8,
 				.pin_assignment = {
-						.miso = {0,0},
-						.mosi = {0,0},
-						.sck = {0,0},
+						.miso = {0,8},
+						.mosi = {0,9},
+						.sck = {0,7},
 						.cs = {0xff,0xff}
-				}
+				},
 		},
+		.cs  = {0,6},
+		.hold  = {0xff,0xff},
+		.wp  = {0xff,0xff},
 		.size = 2*1024*1024
 };
 
@@ -173,9 +177,9 @@ fifo_state_t stdio_in_state = { .head = 0, .tail = 0, .rop = NULL, .rop_len = 0,
  * automatically.  By default, the peripheral devices for the MCU are available
  * plus some devices on the board.
  */
-const devfs_device_t devices[] = {
+const devfs_device_t devfs_list[] = {
 		//mcu peripherals
-		DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, USER_ROOT, S_IFBLK),
+		DEVFS_DEVICE("trace", ffifo, 0, &board_trace_config, &board_trace_state, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core0", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("adc0", mcu_adc, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
@@ -209,8 +213,8 @@ const devfs_device_t devices[] = {
 		//DEVFS_DEVICE("uart3", uartfifo, 3, &uart3_fifo_cfg, &uart3_fifo_state, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("usb0", mcu_usb, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 
-		//user devices
-		//SST25VF_SSP_DEVICE("disk0", 1, 0, 0, 6, 10000000, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, S_IFBLK),
+		//board devices
+		DEVFS_DEVICE("drive0", sst25vf_ssp, 1, &sst25vf_cfg, &sst25vf_state, 0666, USER_ROOT, S_IFBLK),
 
 		//FIFO buffers used for std in and std out
 		DEVFS_DEVICE("stdio-out", fifo, 0, &stdio_out_cfg, &stdio_out_state, 0666, USER_ROOT, S_IFCHR),
@@ -225,7 +229,6 @@ const devfs_device_t devices[] = {
 		DEVFS_TERMINATOR
 };
 
-
 //this is the data needed for the stratify flash file system (wear-aware file system)
 extern const sffs_config_t sffs_cfg;
 sffs_state_t sffs_state;
@@ -234,10 +237,9 @@ open_file_t sffs_open_file; // Cannot be in MCU_SYS_MEM because it is accessed i
 const sffs_config_t sffs_cfg = {
 		.open_file = &sffs_open_file,
 		.devfs = &(sysfs_list[1]),
-		.name = "disk0",
+		.name = "drive0",
 		.state = &sffs_state
 };
-
 
 
 #if 0
@@ -255,10 +257,13 @@ const fatfs_cfg_t fatfs_cfg = {
 };
 #endif
 
+const devfs_device_t mem0 = DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, USER_ROOT, S_IFBLK);
+
+
 const sysfs_t const sysfs_list[] = {
-		APPFS_MOUNT("/app", &(devices[MEM_DEV]), SYSFS_ALL_ACCESS), //the folder for ram/flash applications
-		DEVFS_MOUNT("/dev", devices, SYSFS_READONLY_ACCESS), //the list of devices
-		//SFFS_MOUNT("/home", &sffs_cfg, SYSFS_ALL_ACCESS), //the stratify file system on external RAM
+		APPFS_MOUNT("/app", &mem0, SYSFS_ALL_ACCESS), //the folder for ram/flash applications
+		DEVFS_MOUNT("/dev", devfs_list, SYSFS_READONLY_ACCESS), //the list of devices
+		SFFS_MOUNT("/home", &sffs_cfg, SYSFS_ALL_ACCESS), //the stratify file system on external RAM
 		//FATFS("/home", &fatfs_cfg, SYSFS_ALL_ACCESS), //fat filesystem with external SD card
 		SYSFS_MOUNT("/", sysfs_list, SYSFS_READONLY_ACCESS), //the root filesystem (must be last)
 		SYSFS_TERMINATOR
