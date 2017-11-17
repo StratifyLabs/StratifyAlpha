@@ -16,6 +16,7 @@ limitations under the License.
 
  */
 
+
 #include <sys/lock.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -27,6 +28,7 @@ limitations under the License.
 #include <device/uartfifo.h>
 #include <device/usbfifo.h>
 #include <device/fifo.h>
+#include <device/mcfifo.h>
 #include <device/sys.h>
 #include <sos/link.h>
 #include <sos/fs/sysfs.h>
@@ -91,9 +93,9 @@ const sos_board_config_t sos_board_config = {
 		.stdin_dev = "/dev/stdio-in" ,
 		.stdout_dev = "/dev/stdio-out",
 		.stderr_dev = "/dev/stdio-out",
-		.o_sys_flags = SYS_FLAG_IS_STDIO_FIFO,
+		.o_sys_flags = SYS_FLAG_IS_STDIO_FIFO | SYS_FLAG_IS_TRACE,
 		.sys_name = "Stratify Alpha",
-		.sys_version = "1.4",
+		.sys_version = "1.5",
 		.sys_id = "-KZKdVwMXIj6vTVsbX56",
 		.sys_memory_size = SOS_BOARD_SYSTEM_MEMORY_SIZE,
 		.start = sos_default_thread,
@@ -103,7 +105,6 @@ const sos_board_config_t sos_board_config = {
 		.request = 0,
 		.trace_dev = "/dev/trace",
 		.trace_event = board_trace_event
-		//.socket_api = &lwip_socket_api  //use this to include LWIP -- also remove SYMBOLS_IGNORE_SOCKET from symbols.c
 };
 
 volatile sched_task_t sos_sched_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
@@ -138,13 +139,26 @@ const sst25vf_config_t sst25vf_cfg = {
 		.size = 2*1024*1024
 };
 
-#define UART0_DEVFIFO_BUFFER_SIZE 128
+#define UART0_DEVFIFO_BUFFER_SIZE 1024
 char uart0_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
 
 const uartfifo_config_t uart0_fifo_cfg = {
+		.uart.attr = {
+				.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1 | UART_FLAG_SET_LINE_CODING,
+				.width = 8,
+				.freq = 115200,
+				.pin_assignment = {
+						.tx = {0, 2},
+						.rx = {0, 3},
+						.rts = {0xff, 0xff},
+						.cts = {0xff, 0xff}
+				}
+		},
 		.fifo = { .size = UART0_DEVFIFO_BUFFER_SIZE, .buffer = uart0_fifo_buffer }
 };
+
 uartfifo_state_t uart0_fifo_state MCU_SYS_MEM;
+//uartfifo_state_t uart0_fifo_state MCU_SYS_MEM;
 
 #define UART1_DEVFIFO_BUFFER_SIZE 64
 char uart1_fifo_buffer[UART1_DEVFIFO_BUFFER_SIZE];
@@ -171,7 +185,64 @@ fifo_config_t stdio_out_cfg = { .buffer = stdio_out_buffer, .size = STDIO_BUFFER
 fifo_state_t stdio_out_state = { .head = 0, .tail = 0, .rop = NULL, .rop_len = 0, .wop = NULL, .wop_len = 0 };
 fifo_state_t stdio_in_state = { .head = 0, .tail = 0, .rop = NULL, .rop_len = 0, .wop = NULL, .wop_len = 0 };
 
-#define MEM_DEV 0
+const i2c_config_t i2c1_config = {
+		.attr = {
+				.o_flags = I2C_FLAG_SET_MASTER,
+				.freq = 100000,
+				.pin_assignment = {
+						.sda = {0, 0},
+						.scl = {0, 1}
+				}
+		}
+};
+
+const i2c_config_t i2c2_config = {
+		.attr = {
+				.o_flags = I2C_FLAG_SET_MASTER,
+				.freq = 100000,
+				.pin_assignment = {
+						.sda = {0, 10},
+						.scl = {0, 11}
+				}
+		}
+};
+
+
+#define STREAM_COUNT 16
+#define STREAM_SIZE 128
+#define STREAM_BUFFER_SIZE (STREAM_SIZE*STREAM_COUNT)
+static char stream_buffer[STREAM_COUNT][STREAM_SIZE];
+
+const fifo_config_t board_stream_config_fifo_array[STREAM_COUNT] = {
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[0] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[1] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[2] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[3] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[4] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[5] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[6] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[7] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[8] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[9] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[10] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[11] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[12] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[13] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[14] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[15] },
+};
+
+const mcfifo_config_t board_stream_config = {
+		.count = STREAM_COUNT,
+		.size = STREAM_SIZE,
+		.fifo_config_array = board_stream_config_fifo_array
+};
+
+fifo_state_t board_stream_state_fifo_array[STREAM_COUNT];
+mcfifo_state_t board_stream_state = {
+		.fifo_state_array = board_stream_state_fifo_array
+};
+
 
 /* This is the list of devices that will show up in the /dev folder
  * automatically.  By default, the peripheral devices for the MCU are available
@@ -180,6 +251,7 @@ fifo_state_t stdio_in_state = { .head = 0, .tail = 0, .rop = NULL, .rop_len = 0,
 const devfs_device_t devfs_list[] = {
 		//mcu peripherals
 		DEVFS_DEVICE("trace", ffifo, 0, &board_trace_config, &board_trace_state, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("multistream", mcfifo, 0, &board_stream_config, &board_stream_state, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("core0", mcu_core, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("adc0", mcu_adc, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
@@ -194,8 +266,8 @@ const devfs_device_t devfs_list[] = {
 		DEVFS_DEVICE("pio3", mcu_pio, 3, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("pio4", mcu_pio, 4, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("i2c0", mcu_i2c, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
-		DEVFS_DEVICE("i2c1", mcu_i2c, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
-		DEVFS_DEVICE("i2c2", mcu_i2c, 2, 0, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("i2c1", mcu_i2c, 1, &i2c1_config, 0, 0666, USER_ROOT, S_IFCHR),
+		DEVFS_DEVICE("i2c2", mcu_i2c, 2, &i2c2_config, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("pwm1", mcu_pwm, 1, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("qei0", mcu_qei, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
 		DEVFS_DEVICE("rtc", mcu_rtc, 0, 0, 0, 0666, USER_ROOT, S_IFCHR),
@@ -251,7 +323,7 @@ open_file_t fatfs_open_file; // Cannot be in MCU_SYS_MEM because it is accessed 
 const fatfs_cfg_t fatfs_cfg = {
 		.open_file = &fatfs_open_file,
 		.devfs = &(sysfs_list[1]),
-		.name = "disk1",
+		.name = "drive0",
 		.state = &fatfs_state,
 		.vol_id = 0
 };

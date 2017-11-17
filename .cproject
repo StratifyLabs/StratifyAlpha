@@ -50,7 +50,7 @@
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.81919210" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="${HOST}-" valueType="string"/>
 							<option id="cdt.managedbuild.option.gnu.cross.path.447483519" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value=" ${PathDelimiter}${TOOLSPATH}/bin" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.332820140" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_release" id="cdt.managedbuild.builder.gnu.cross.303795568" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_release" id="cdt.managedbuild.builder.gnu.cross.303795568" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1604263445" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.582390738" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.308019714" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
@@ -152,7 +152,7 @@
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.598591197" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="${HOST}-" valueType="string"/>
 							<option id="cdt.managedbuild.option.gnu.cross.path.61400434" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value=" ${PathDelimiter}${TOOLSPATH}/bin" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1782988719" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_debug" id="cdt.managedbuild.builder.gnu.cross.100280295" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_debug" id="cdt.managedbuild.builder.gnu.cross.100280295" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.338967720" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.2034652291" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.763540937" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
@@ -174,7 +174,7 @@
 								<option id="gnu.c.link.option.libs.1717319848" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="sos_sys${BUILD_TYPE}"/>
 									<listOptionValue builtIn="false" value="son_kernel"/>
-									<listOptionValue builtIn="false" value="sgfx_kernel_p1"/>
+									<listOptionValue builtIn="false" value="sgfx_kernel_1bpp"/>
 									<listOptionValue builtIn="false" value="lwip_kernel"/>
 									<listOptionValue builtIn="false" value="sos_mcu_${BUILD_DEVICE}${BUILD_TYPE}"/>
 									<listOptionValue builtIn="false" value="m"/>
@@ -253,7 +253,7 @@
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1022202325" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="${HOST}-" valueType="string"/>
 							<option id="cdt.managedbuild.option.gnu.cross.path.2041643538" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value=" ${PathDelimiter}${TOOLSPATH}/bin" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1382627895" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_debug_boot" id="cdt.managedbuild.builder.gnu.cross.417648585" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_debug_boot" id="cdt.managedbuild.builder.gnu.cross.417648585" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.804249967" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.712118899" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.134506205" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
@@ -352,7 +352,7 @@
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.72779556" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="${HOST}-" valueType="string"/>
 							<option id="cdt.managedbuild.option.gnu.cross.path.266479002" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value=" ${PathDelimiter}${TOOLSPATH}/bin" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1689247500" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_release_boot" id="cdt.managedbuild.builder.gnu.cross.1178637745" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<builder buildPath="${workspace_loc:/StratifyAlpha}/build_release_boot" id="cdt.managedbuild.builder.gnu.cross.1178637745" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.2119488733" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1272583127" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1808501212" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
