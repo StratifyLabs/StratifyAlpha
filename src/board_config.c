@@ -16,7 +16,7 @@ limitations under the License.
 
  */
 
-
+#include <mcu/arch.h>
 #include <sys/lock.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -69,11 +69,26 @@ const mcu_board_config_t mcu_board_config = {
 		.led.port = 1, .led.pin = 18
 };
 
-
 void board_event_handler(int event, void * args){
 	switch(event){
+
+	case MCU_BOARD_CONFIG_EVENT_FATAL:
+		//start the bootloader on a fatal event
+		if( args ){
+			mcu_debug_user_printf("FATAL:%s\n", (const char*)args);
+		} else {
+			mcu_debug_user_printf("FATAL:UNKNOWN\n");
+		}
+
+		break;
 	case MCU_BOARD_CONFIG_EVENT_ROOT_FATAL:
 		//start the bootloader on a fatal event
+		if( args ){
+			mcu_debug_root_printf("FATAL:%s\n", (const char*)args);
+		} else {
+			mcu_debug_root_printf("FATAL:UNKNOWN\n");
+		}
+
 		mcu_core_invokebootloader(0, 0);
 		break;
 	case MCU_BOARD_CONFIG_EVENT_START_LINK:
@@ -95,7 +110,7 @@ const sos_board_config_t sos_board_config = {
 		.stderr_dev = "/dev/stdio-out",
 		.o_sys_flags = SYS_FLAG_IS_STDIO_FIFO | SYS_FLAG_IS_TRACE,
 		.sys_name = "Stratify Alpha",
-		.sys_version = "1.5",
+		.sys_version = "1.4",
 		.sys_id = "-KZKdVwMXIj6vTVsbX56",
 		.sys_memory_size = SOS_BOARD_SYSTEM_MEMORY_SIZE,
 		.start = sos_default_thread,
@@ -108,19 +123,11 @@ const sos_board_config_t sos_board_config = {
 };
 
 volatile sched_task_t sos_sched_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
-task_t sos_task_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
+volatile task_t sos_task_table[SOS_BOARD_TASK_TOTAL] MCU_SYS_MEM;
 
 #define USER_ROOT 0
 
-/* This is the state information for the sst25vf flash IC driver.
- *
- */
 sst25vf_state_t sst25vf_state MCU_SYS_MEM;
-
-/* This is the configuration specific structure for the sst25vf
- * flash IC driver.
- */
-//const sst25vf_cfg_t sst25vf_cfg = SST25VF_DEVICE_CFG(0, 6, -1, 0, -1, 0, 0, 8, 2*1024*1024, 10000000);
 const sst25vf_config_t sst25vf_cfg = {
 		.spi.attr = {
 				.o_flags = SPI_FLAG_SET_MASTER | SPI_FLAG_IS_MODE0 | SPI_FLAG_IS_FORMAT_SPI,
@@ -141,7 +148,7 @@ const sst25vf_config_t sst25vf_cfg = {
 
 #define UART0_DEVFIFO_BUFFER_SIZE 1024
 char uart0_fifo_buffer[UART0_DEVFIFO_BUFFER_SIZE];
-
+uartfifo_state_t uart0_fifo_state MCU_SYS_MEM;
 const uartfifo_config_t uart0_fifo_cfg = {
 		.uart.attr = {
 				.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1 | UART_FLAG_SET_LINE_CODING,
@@ -157,26 +164,23 @@ const uartfifo_config_t uart0_fifo_cfg = {
 		.fifo = { .size = UART0_DEVFIFO_BUFFER_SIZE, .buffer = uart0_fifo_buffer }
 };
 
-uartfifo_state_t uart0_fifo_state MCU_SYS_MEM;
-//uartfifo_state_t uart0_fifo_state MCU_SYS_MEM;
 
 #define UART1_DEVFIFO_BUFFER_SIZE 64
 char uart1_fifo_buffer[UART1_DEVFIFO_BUFFER_SIZE];
+uartfifo_state_t uart1_fifo_state MCU_SYS_MEM;
 const uartfifo_config_t uart1_fifo_cfg = {
 		.fifo = { .size = UART1_DEVFIFO_BUFFER_SIZE, .buffer = uart1_fifo_buffer }
 };
-uartfifo_state_t uart1_fifo_state MCU_SYS_MEM;
 
 #define UART3_DEVFIFO_BUFFER_SIZE 64
 char uart3_fifo_buffer[UART3_DEVFIFO_BUFFER_SIZE];
+uartfifo_state_t uart3_fifo_state MCU_SYS_MEM;
 const uartfifo_config_t uart3_fifo_cfg = {
 		.fifo = { .size = UART3_DEVFIFO_BUFFER_SIZE, .buffer = uart3_fifo_buffer }
 };
-uartfifo_state_t uart3_fifo_state MCU_SYS_MEM;
 
 
 #define STDIO_BUFFER_SIZE 128
-
 char stdio_out_buffer[STDIO_BUFFER_SIZE];
 char stdio_in_buffer[STDIO_BUFFER_SIZE];
 
@@ -208,7 +212,7 @@ const i2c_config_t i2c2_config = {
 };
 
 
-#define STREAM_COUNT 16
+#define STREAM_COUNT 4
 #define STREAM_SIZE 128
 #define STREAM_BUFFER_SIZE (STREAM_SIZE*STREAM_COUNT)
 static char stream_buffer[STREAM_COUNT][STREAM_SIZE];
@@ -217,19 +221,7 @@ const fifo_config_t board_stream_config_fifo_array[STREAM_COUNT] = {
 		{ .size = STREAM_SIZE, .buffer = stream_buffer[0] },
 		{ .size = STREAM_SIZE, .buffer = stream_buffer[1] },
 		{ .size = STREAM_SIZE, .buffer = stream_buffer[2] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[3] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[4] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[5] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[6] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[7] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[8] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[9] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[10] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[11] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[12] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[13] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[14] },
-		{ .size = STREAM_SIZE, .buffer = stream_buffer[15] },
+		{ .size = STREAM_SIZE, .buffer = stream_buffer[3] }
 };
 
 const mcfifo_config_t board_stream_config = {
@@ -330,7 +322,6 @@ const fatfs_cfg_t fatfs_cfg = {
 #endif
 
 const devfs_device_t mem0 = DEVFS_DEVICE("mem0", mcu_mem, 0, 0, 0, 0666, USER_ROOT, S_IFBLK);
-
 
 const sysfs_t const sysfs_list[] = {
 		APPFS_MOUNT("/app", &mem0, SYSFS_ALL_ACCESS), //the folder for ram/flash applications
