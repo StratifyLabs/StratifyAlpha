@@ -5,3 +5,6 @@
 *.s
 *.bin
 ./build_*StratifyAlpha*
+cmake_*
+*.user
+build_*

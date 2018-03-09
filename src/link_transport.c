@@ -22,6 +22,7 @@ limitations under the License.
 #include <mcu/debug.h>
 #include <sos/dev/pio.h>
 #include "link_transport.h"
+#include "../config.h"
 
 
 static link_transport_phy_t link_transport_open(const char * name, int baudrate);
@@ -56,8 +57,8 @@ link_transport_phy_t link_transport_open(const char * name, int baudrate){
 			&m_usb_control,
 			&sos_link_transport_usb_constants,
 			&usb_attr,
-			mcu_pin(1,19),
-			1); //USB pin is active high
+			mcu_pin(USB_UP_PORT,USB_UP_PIN),
+			USB_UP_PIN_ACTIVE_HIGH); //USB pin is active high
 
 	return fd;
 }

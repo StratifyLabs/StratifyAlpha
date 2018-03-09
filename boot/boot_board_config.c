@@ -16,6 +16,11 @@ limitations under the License.
 
 */
 
+#if defined ___debug
+const struct __sFILE_fake __sf_fake_stdin;
+const struct __sFILE_fake __sf_fake_stdout;
+const struct __sFILE_fake __sf_fake_stderr;
+#endif
 
 #include <mcu/types.h>
 #include <mcu/core.h>
@@ -44,11 +49,11 @@ const mcu_board_config_t mcu_board_config = {
 						.rts = {0xff, 0xff}
 				},
 				.freq = 115200,
-				.o_flags = UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1,
+				.o_flags =  UART_FLAG_IS_PARITY_NONE | UART_FLAG_IS_STOP1,
 				.width = 8
 		},
 		.o_flags = 0,
-		.led.port = 1, .led.pin = 18,
+		.led = {LED_PORT, LED_PIN},
 		.event_handler = 0
 };
 

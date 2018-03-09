@@ -24,6 +24,7 @@ limitations under the License.
 #include <mcu/boot_debug.h>
 
 #include "link_transport.h"
+#include "board_config.h"
 
 static link_transport_phy_t link_transport_open(const char * name, int baudrate);
 
@@ -56,8 +57,8 @@ link_transport_phy_t link_transport_open(const char * name, int baudrate){
 			&m_usb_control,
 			&sos_link_transport_usb_constants,
 			&usb_attr,
-			mcu_pin(2,9),
-			1); //active high up pin
+			mcu_pin(USB_UP_PORT,USB_UP_PIN),
+			USB_UP_PIN_ACTIVE_HIGH); //active high up pin
 
 	return fd;
 }
