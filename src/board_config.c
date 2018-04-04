@@ -195,27 +195,9 @@ fifo_config_t stdio_out_cfg = { .buffer = stdio_out_buffer, .size = STDIO_BUFFER
 fifo_state_t stdio_out_state;
 fifo_state_t stdio_in_state;
 
-const i2c_config_t i2c1_config = {
-		.attr = {
-				.o_flags = I2C_FLAG_SET_MASTER,
-				.freq = 100000,
-				.pin_assignment = {
-						.sda = {0, 0},
-						.scl = {0, 1}
-				}
-		}
-};
 
-const i2c_config_t i2c2_config = {
-		.attr = {
-				.o_flags = I2C_FLAG_SET_MASTER,
-				.freq = 100000,
-				.pin_assignment = {
-						.sda = {0, 10},
-						.scl = {0, 11}
-				}
-		}
-};
+I2C_DECLARE_CONFIG_MASTER(i2c1, I2C_FLAG_SET_MASTER, 100000, 0, 0, 0, 1);
+I2C_DECLARE_CONFIG_MASTER(i2c2, I2C_FLAG_SET_MASTER, 100000, 0, 10, 0, 11);
 
 
 #define CFIFO_COUNT 4
