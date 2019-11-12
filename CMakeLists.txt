@@ -16,7 +16,7 @@ project(${SOS_NAME} CXX C)
 #Add sources to the project
 set(SOURCES_PREFIX ${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(src)
-list(APPEND KERNEL_SOURCELIST ${SOURCES} ${CMAKE_SOURCE_DIR}/README.md)
+list(APPEND KERNEL_SOURCELIST ${SOURCES} ${CMAKE_SOURCE_DIR}/README.md sl_settings.json src/sl_config.h)
 
 #Change to boot sources
 set(SOURCES "")

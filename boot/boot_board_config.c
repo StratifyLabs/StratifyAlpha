@@ -29,6 +29,10 @@ const struct __sFILE_fake __sf_fake_stderr;
 #include "link_transport.h"
 #include "board_config.h"
 
+const struct __sFILE_fake __sf_fake_stdin;
+const struct __sFILE_fake __sf_fake_stdout;
+const struct __sFILE_fake __sf_fake_stderr;
+
 const u32 mcu_crp_value __attribute__ ((section(".crp_section"))) = 0x87654321;
 
 #define STFY_SYSTEM_CLOCK 60000000

@@ -5,10 +5,15 @@
    "permissions": "public",
    "publisher": "Stratify Labs, Inc",
    "tags": "nxp,lpc,lpc40xx,lpc4078,arm,cortex-m4",
-   "type": "bsp",
-   "uid": "QSW7bQHeDqhJEcZ0mxQ5SmEYUSL2",
-   "version": "1.5",
+   "type": "os",
+   "uid": "9cQyOTk3fZXOuMtPyf5j9X4H4b83",
+   "version": "1.7",
    "mbedMountName": "",
    "documentId": "w1W453PO85llAk3PsTFf",
-   "hardwareId": "0x0000000A"
+   "hardwareId": "0x0000000A",
+   "buildList": {
+      "51D5z9rjMUQJfhfiGI6L": "1.6",
+      "wmKzrzQMDY9GJ48S0cKx": "1.7"
+   },
+   "timestamp": 1558227867
 }
