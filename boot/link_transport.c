@@ -59,7 +59,7 @@ link_transport_phy_t link_transport_open(const char * name, const void * options
 	usb_attr.freq = mcu_board_config.core_osc_freq;
 	fd = boot_link_transport_usb_open(name,
 												 &m_usb_control,
-												 &sos_link_transport_usb_constants,
+												 &sos_link_transport_usb_vcp_constants,
 												 &usb_attr,
 												 mcu_pin(USB_UP_PORT,USB_UP_PIN),
 												 USB_UP_PIN_ACTIVE_HIGH); //active high up pin
